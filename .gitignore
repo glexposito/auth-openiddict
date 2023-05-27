@@ -267,4 +267,7 @@ __pycache__/
 # Cake - Uncomment if you are using it
 # tools/
 
+# SQLite 3
+*.*sqlite3*
+
 # End of https://mrkandreev.name/snippets/gitignore-generator/#ASPNETCore
