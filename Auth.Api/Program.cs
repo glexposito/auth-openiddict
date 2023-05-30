@@ -11,7 +11,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-    ConfigureDatabase(builder);
+ConfigureDatabase(builder);
 
 ConfigureOpenIddict(builder.Services);
 
@@ -49,6 +49,7 @@ void ConfigureOpenIddict(IServiceCollection services)
         {
             options.UseEntityFrameworkCore()
                 .UseDbContext<ApplicationDbContext>();
+            
         })
         .AddServer(options =>
         {
@@ -56,18 +57,19 @@ void ConfigureOpenIddict(IServiceCollection services)
 
             options.AllowPasswordFlow();
             options.AcceptAnonymousClients();
-
+            
             options.RegisterScopes(OpenIddictConstants.Scopes.Email,
                 OpenIddictConstants.Scopes.Profile,
                 OpenIddictConstants.Scopes.Roles);
-
+            
             options.SetAccessTokenLifetime(TimeSpan.FromMinutes(60));
 
             options.AddDevelopmentEncryptionCertificate()
                 .AddDevelopmentSigningCertificate();
 
             options.UseAspNetCore()
-                .EnableTokenEndpointPassthrough();
+                .EnableTokenEndpointPassthrough()
+                .DisableTransportSecurityRequirement();
         })
         .AddValidation(options =>
         {
@@ -85,3 +87,5 @@ void ConfigureDatabase(WebApplicationBuilder webApplicationBuilder)
         options.UseOpenIddict();
     });
 }
+
+public abstract partial class Program { }
