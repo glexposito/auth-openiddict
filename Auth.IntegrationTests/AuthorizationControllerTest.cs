@@ -9,7 +9,7 @@ public class AuthorizationControllerTest : IntegrationTestBase
     public AuthorizationControllerTest(WebApplicationFactory<Program> factory) : base(factory) { }
     
     [Fact]
-    public async Task Exchange_WhenRightCredentialsProvided_ShouldReturn200OkWithToken()
+    public async Task Exchange_WhenPasswordGrantType_AndRightCredentialsProvided_ShouldReturn200OkWithToken()
     {
         var formData = new FormUrlEncodedContent(new[]
         {
@@ -24,11 +24,11 @@ public class AuthorizationControllerTest : IntegrationTestBase
         
         var result = await response.Content.ReadAsStringAsync(); 
         
-        result.Should().Contain("Bearer");
+        result.Should().Contain("access_token");
     }
     
     [Fact]
-    public async Task Exchange_WhenWrongCredentialsProvided_ShouldReturn400BadRequest()
+    public async Task Exchange_WhenPasswordGrantType_AndWrongCredentialsProvided_ShouldReturn400BadRequest()
     {
         var formData = new FormUrlEncodedContent(new[]
         {
