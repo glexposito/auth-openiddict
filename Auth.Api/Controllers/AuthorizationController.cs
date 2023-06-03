@@ -25,6 +25,11 @@ public class AuthorizationController : ControllerBase
             return await HandleExchangePasswordGrantType(request);
         }
 
+        if (request.IsRefreshTokenGrantType())
+        {
+            return await HandleExchangeRefreshTokenGrantType();
+        }
+
         throw new InvalidOperationException("The specified grant type is not supported.");
     }
 
@@ -49,9 +54,38 @@ public class AuthorizationController : ControllerBase
 
         identity.AddClaim(OpenIddictConstants.Claims.Email, Email,
             OpenIddictConstants.Destinations.AccessToken);
+        
+        var claimsPrincipal = new ClaimsPrincipal(identity);
+        claimsPrincipal.SetScopes(OpenIddictConstants.Scopes.OfflineAccess);
 
-        var principal = new ClaimsPrincipal(identity);
+        return Task.FromResult<IActionResult>(SignIn(claimsPrincipal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme));
+    }
+    
+    private Task<IActionResult> HandleExchangeRefreshTokenGrantType()
+    {
+        if (User.Identity == null)
+        {
+            return Task.FromResult<IActionResult>(Forbid(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme));
+        }
+        
+        var identity = new ClaimsIdentity(
+            authenticationType: TokenValidationParameters.DefaultAuthenticationType,
+            nameType: OpenIddictConstants.Claims.Name,
+            roleType: OpenIddictConstants.Claims.Role);
 
-        return Task.FromResult<IActionResult>(SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme));
+        identity.AddClaim(OpenIddictConstants.Claims.Subject,
+            Guid.NewGuid().ToString(),
+            OpenIddictConstants.Destinations.AccessToken);
+
+        identity.AddClaim(OpenIddictConstants.Claims.Name, Fullname,
+            OpenIddictConstants.Destinations.AccessToken);
+
+        identity.AddClaim(OpenIddictConstants.Claims.Email, Email,
+            OpenIddictConstants.Destinations.AccessToken);
+            
+        var claimsPrincipal = new ClaimsPrincipal(identity);
+        claimsPrincipal.SetScopes(OpenIddictConstants.Scopes.OfflineAccess);
+        
+        return Task.FromResult<IActionResult>(SignIn(claimsPrincipal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme));
     }
 }

@@ -56,6 +56,7 @@ void ConfigureOpenIddict(IServiceCollection services)
             options.SetTokenEndpointUris("connect/token");
 
             options.AllowPasswordFlow();
+            options.AllowRefreshTokenFlow();
             options.AcceptAnonymousClients();
             
             options.RegisterScopes(OpenIddictConstants.Scopes.Email,
