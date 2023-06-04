@@ -1,7 +1,6 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
 
@@ -36,22 +35,24 @@ public class AuthorizationController : ControllerBase
         }
 
         var identity = new ClaimsIdentity(
-            authenticationType: TokenValidationParameters.DefaultAuthenticationType,
-            nameType: OpenIddictConstants.Claims.Name,
-            roleType: OpenIddictConstants.Claims.Role);
+            authenticationType: OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
 
-        identity.AddClaim(OpenIddictConstants.Claims.Subject,
-            Guid.NewGuid().ToString(),
-            OpenIddictConstants.Destinations.AccessToken);
+        identity.AddClaim(OpenIddictConstants.Claims.Name, Fullname);
 
-        identity.AddClaim(OpenIddictConstants.Claims.Name, Fullname,
-            OpenIddictConstants.Destinations.AccessToken);
+        identity.AddClaim(OpenIddictConstants.Claims.Email, Email);
 
-        identity.AddClaim(OpenIddictConstants.Claims.Email, Email,
-            OpenIddictConstants.Destinations.AccessToken);
+        identity.AddClaim(OpenIddictConstants.Claims.Subject, Guid.NewGuid().ToString());
+
+        identity.SetDestinations(GetDestinations);
 
         var principal = new ClaimsPrincipal(identity);
 
-        return Task.FromResult<IActionResult>(SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme));
+        return Task.FromResult<IActionResult>(
+            SignIn(principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme));
+    }
+
+    private static IEnumerable<string> GetDestinations(Claim claim)
+    {
+        yield return OpenIddictConstants.Destinations.AccessToken;
     }
 }

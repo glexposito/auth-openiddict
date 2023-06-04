@@ -76,6 +76,11 @@ void ConfigureOpenIddict(IServiceCollection services)
             options.UseLocalServer();
             options.UseAspNetCore();
         });
+    
+    services.AddAuthentication(options =>
+    {
+        options.DefaultScheme = OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+    });
 }
 
 void ConfigureDatabase(WebApplicationBuilder webApplicationBuilder)

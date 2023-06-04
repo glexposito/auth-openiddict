@@ -9,7 +9,7 @@ public class AuthorizationControllerTest : IntegrationTestBase
     public AuthorizationControllerTest(WebApplicationFactory<Program> factory) : base(factory) { }
     
     [Fact]
-    public async Task Exchange_WhenPasswordGrantType_AndRightCredentialsProvided_ShouldReturn200OkWithToken()
+    public async Task Exchange_WhenPasswordGrantType_AndValidCredentialsProvided_ShouldReturn200OkWithToken()
     {
         var formData = new FormUrlEncodedContent(new[]
         {
@@ -28,7 +28,7 @@ public class AuthorizationControllerTest : IntegrationTestBase
     }
     
     [Fact]
-    public async Task Exchange_WhenPasswordGrantType_AndWrongCredentialsProvided_ShouldReturn400BadRequest()
+    public async Task Exchange_WhenPasswordGrantType_AndInvalidCredentialsProvided_ShouldReturn400BadRequest()
     {
         var formData = new FormUrlEncodedContent(new[]
         {
