@@ -29,7 +29,7 @@ jobs:
 
     - name: Deploy database
       run: |
-        $env:ASPNETCORE_ENVIRONMENT='Integration'
+        export ASPNETCORE_ENVIRONMENT=Integration
         dotnet ef database update --project Auth.Api
 
     - name: Run tests
