@@ -270,4 +270,7 @@ __pycache__/
 # SQLite 3
 *.*sqlite3*
 
+# Tests output directory
+tests/
+
 # End of https://mrkandreev.name/snippets/gitignore-generator/#ASPNETCore
