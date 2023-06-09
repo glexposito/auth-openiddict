@@ -27,12 +27,5 @@ jobs:
     - name: Build
       run: dotnet build --configuration Debug --no-restore
 
-    - name: Deploy database
-      run: |
-        export ASPNETCORE_ENVIRONMENT=Integration
-        dotnet tool install --global dotnet-ef
-        mkdir tests
-        dotnet ef database update --project Auth.Api
-
     - name: Run tests
-      run: dotnet test --environment ASPNETCORE_ENVIRONMENT=Integration --no-restore --output tests
+      run: dotnet test --no-restore
