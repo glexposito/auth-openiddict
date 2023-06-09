@@ -41,7 +41,6 @@ void ConfigureOpenIddict(IServiceCollection services)
         {
             options.UseEntityFrameworkCore()
                 .UseDbContext<ApplicationDbContext>();
-            
         })
         .AddServer(options =>
         {
@@ -49,11 +48,11 @@ void ConfigureOpenIddict(IServiceCollection services)
 
             options.AllowPasswordFlow();
             options.AcceptAnonymousClients();
-            
+
             options.RegisterScopes(OpenIddictConstants.Scopes.Email,
                 OpenIddictConstants.Scopes.Profile,
                 OpenIddictConstants.Scopes.Roles);
-            
+
             options.SetAccessTokenLifetime(TimeSpan.FromMinutes(60));
 
             options.AddDevelopmentEncryptionCertificate()
@@ -68,10 +67,11 @@ void ConfigureOpenIddict(IServiceCollection services)
             options.UseLocalServer();
             options.UseAspNetCore();
         });
-    
+
     services.AddAuthentication(options =>
     {
-        options.DefaultScheme = OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
+        options.DefaultScheme = OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreDefaults
+            .AuthenticationScheme;
     });
 }
 
@@ -79,10 +79,12 @@ void ConfigureDatabase(WebApplicationBuilder webApplicationBuilder)
 {
     webApplicationBuilder.Services.AddDbContext<ApplicationDbContext>(options =>
     {
-        options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnectionString"));
+        options.UseInMemoryDatabase("AppDatabase");
 
         options.UseOpenIddict();
     });
 }
 
-public abstract partial class Program { }
+public abstract partial class Program
+{
+}
