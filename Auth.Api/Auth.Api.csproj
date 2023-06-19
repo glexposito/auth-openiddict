@@ -15,7 +15,7 @@
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.5" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="7.0.5" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="7.0.7" />
         <PackageReference Include="OpenIddict" Version="4.4.0" />
         <PackageReference Include="OpenIddict.Abstractions" Version="4.4.0" />
         <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="4.4.0" />
