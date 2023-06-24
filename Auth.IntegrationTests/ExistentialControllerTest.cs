@@ -1,9 +1,9 @@
 using System.Net;
 using System.Net.Http.Headers;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Auth.IntegrationTests;
 
@@ -24,17 +24,17 @@ public class ExistentialControllerTest : IntegrationTestBase
         var tokenResponse = await Client.PostAsync("/connect/token", formData);
 
         var tokenContent = await tokenResponse.Content.ReadAsStringAsync();
-        
-        var data = (JObject)JsonConvert.DeserializeObject(tokenContent)!;
 
-        var token = data.SelectToken("access_token")!.Value<string>();
+        var data = JsonSerializer.Deserialize<JsonObject>(tokenContent);
+
+        var token = data!["access_token"]!.GetValue<string>();
         
-        var tokenType = data.SelectToken("token_type")!.Value<string>();
+        var tokenType = data["token_type"]!.GetValue<string>();
 
         var requestMessage =
             new HttpRequestMessage(HttpMethod.Get, "/whoami");
         requestMessage.Headers.Authorization =
-                new AuthenticationHeaderValue(tokenType!, token);
+                new AuthenticationHeaderValue(tokenType, token);
           
         var response = await Client.SendAsync(requestMessage);
         
