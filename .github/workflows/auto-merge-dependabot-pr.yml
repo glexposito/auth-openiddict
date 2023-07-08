@@ -18,5 +18,4 @@ jobs:
         run: gh pr review --approve $PR_URL
 
       - name: Auto-merge Dependabot PR
-        if: contains(github.event.pull_request.title, 'deps-dev')
         run: gh pr merge --auto --merge $PR_URL
